@@ -2,6 +2,7 @@ package com.example.geoquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,9 @@ import org.w3c.dom.Text;
 //My class extends AppCompatActivity, which is an Android class that
 //lets my code run on older versions of Android
 public class MainActivity extends AppCompatActivity {
+    //This is a tag for logging
+    private final String TAG = "MainActivity";
+    //Other members
     private Button trueButton;
     private Button falseButton;
     private Button nextButton;
@@ -31,7 +35,11 @@ public class MainActivity extends AppCompatActivity {
     //This runs when the activity is created. When it is created, it needs a UI to manage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //You have to call the super method because it does things that need to happen
         super.onCreate(savedInstanceState);
+
+        //Log a message to show that this method was called
+        Log.d(TAG, "onCreate(Bundle) called");
 
         //This gives the activity a UI to manage, activity_main.xml
         //This inflates the layout and puts it on the screen. On inflation,
@@ -93,5 +101,41 @@ public class MainActivity extends AppCompatActivity {
         int messageResID = ((userAns == correctAns) ? R.string.correct_toast : R.string.incorrect_toast);
         //Make a Toast appear
         Toast.makeText(this, messageResID, Toast.LENGTH_SHORT).show();
+    }
+
+    //Override Activity Lifecycle Functions to display log messages when they are called
+    @Override
+    protected void onStart() {
+        //You have to call the super method because it does things that need to happen
+        super.onStart();
+        Log.d(TAG, "onStart() called");
+    }
+
+    @Override
+    protected void onResume() {
+        //You have to call the super method because it does things that need to happen
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+    @Override
+    protected void onPause() {
+        //You have to call the super method because it does things that need to happen
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    protected void onStop() {
+        //You have to call the super method because it does things that need to happen
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+
+    @Override
+    protected void onDestroy() {
+        //You have to call the super method because it does things that need to happen
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
     }
 }
