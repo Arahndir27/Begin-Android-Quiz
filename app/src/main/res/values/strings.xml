@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">GeoQuiz</string>
+    <string name="question_default">Do or do not. There is no try.</string>
+    <string name="question_cor">Coruscant is the capital of the Galactic Republic</string>
+    <string name="question_palp">Emperor Palpatine is the galaxy\'s salvation</string>
+    <string name="question_hall">Darth Vader has the best hallway scene</string>
+    <string name="question_endor">The destruction of the 2nd Death Star likely wasted the Forest Moon of Endor</string>
+    <string name="question_high_ground">Obi Wan is king of the low ground</string>
+    <string name="question_tatooine">Tatooine is where everything important happens</string>
+    <string name="true_button">True</string>
+    <string name="false_button">False</string>
+    <string name="next_button">Next</string>
+    <string name="correct_toast">Obi Wan has taught you well!</string>
+    <string name="incorrect_toast">You have much to learn, my very young apprentice.</string>
+</resources>
