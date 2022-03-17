@@ -19,7 +19,7 @@ public class Question {
         this.questionID = questionID;
     }
 
-    public boolean isAnswer() {
+    public boolean getAnswer() {
         return answer;
     }
 
