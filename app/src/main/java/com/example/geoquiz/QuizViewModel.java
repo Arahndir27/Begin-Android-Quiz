@@ -16,6 +16,15 @@ public class QuizViewModel extends ViewModel {
             new Question(R.string.question_tatooine, true)
     };
     public int currentIndex = 0;
+    private boolean isCheater = false;
+
+    public boolean isCheater() {
+        return isCheater;
+    }
+
+    public void setCheater(boolean cheater) {
+        isCheater = cheater;
+    }
 
     public QuizViewModel() {
         super();

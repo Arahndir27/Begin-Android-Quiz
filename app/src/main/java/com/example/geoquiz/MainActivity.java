@@ -1,20 +1,18 @@
 package com.example.geoquiz;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 //My class extends AppCompatActivity, which is an Android class that
 //lets my code run on older versions of Android
@@ -23,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     //This is the key for our savedInstanceState Bundle
     private final String KEY_INDEX = "index";
+    //This is the key for figuring out if the user cheated (communicating with CheatActivity)
+    private final int REQUEST_CODE_CHEAT = 0;
     //Other members
     private Button trueButton;
     private Button falseButton;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView questionTextView;
 
     //This is a getter for the quiz ViewModel
-    private QuizViewModel getQuizModel() {
+    private QuizViewModel getQuizViewModel() {
         return ViewModelProviders.of(this).get(QuizViewModel.class);
     }
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Move to the next question via the ViewModel
-                getQuizModel().moveToNextQuestion();
+                getQuizViewModel().moveToNextQuestion();
                 //Update the question
                 updateQuestion();            }
         });
@@ -111,12 +111,16 @@ public class MainActivity extends AppCompatActivity {
                 //ActivityManager, which manages activities. The intent specifies which class the
                 //ActivityManager should start and where it can be found so that info
                 //can then be passed through startActivity()
-                boolean answerIsTrue = getQuizModel().getCurrQuestionAns();
+                boolean answerIsTrue = getQuizViewModel().getCurrQuestionAns();
                 Intent intent = CheatActivity.newIntent(MainActivity.this, answerIsTrue);
 
                 //This actually sends the request to the OS ActivityManager to create the activity
                 //specified in the intent. It also passes extras in the intent to that activity.
-                startActivity(intent);
+                //startActivity(intent);
+
+                //This function does the same stuff as startActivity, but also takes a request code,
+                //which is sent to the child and back to the parent.
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
 
@@ -124,10 +128,30 @@ public class MainActivity extends AppCompatActivity {
         this.updateQuestion();
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Make sure the codes are OK
+        if (resultCode != Activity.RESULT_OK) {
+            //This is unexpected, so be done
+            return;
+        }
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            boolean isCheater = false;
+            if (data != null && data.hasExtra(CheatActivity.EXTRA_ANSWER_IS_SHOWN)) {
+                //The user cheated! Make them feel sad
+                isCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_IS_SHOWN, false);
+            }
+            getQuizViewModel().setCheater(isCheater);
+        }
+    }
+
     //This updates the view to show the next question
     private void updateQuestion() {
         //Get the ID of the current question
-        int questionTextResID = getQuizModel().getCurrQuestionText();
+        int questionTextResID = getQuizViewModel().getCurrQuestionText();
         //Set the text view to show that question
         questionTextView.setText(questionTextResID);
     }
@@ -135,11 +159,19 @@ public class MainActivity extends AppCompatActivity {
     //This compare what the user answered to the correct answer to see if the user is right or not
     private void checkAnswer(boolean userAns) {
         //Get the correct answer
-        boolean correctAns = getQuizModel().getCurrQuestionAns();
-        //Set the message to display based on if the user is correct or not
-        int messageResID = ((userAns == correctAns) ? R.string.correct_toast : R.string.incorrect_toast);
+        boolean correctAns = getQuizViewModel().getCurrQuestionAns();
+        //Set the message to display based on if the user is correct or not or if they cheated
+        int messageResID;
+        if (getQuizViewModel().isCheater()) {
+            //Display a toast to make them sad
+            messageResID = R.string.judgement_toast;
+        }
+        else {
+            //Display toast on whether they were right or wrong
+            messageResID = ((userAns == correctAns) ? R.string.correct_toast : R.string.incorrect_toast);
+        }
         //Make a Toast appear
-        Toast.makeText(this, messageResID, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, messageResID, Toast.LENGTH_LONG).show();
     }
 
     //Override Activity Lifecycle Functions to display log messages when they are called
@@ -171,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         //Call the super function because you have to
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
-        savedInstanceState.putInt(KEY_INDEX, getQuizModel().getCurrentIndex());
+        savedInstanceState.putInt(KEY_INDEX, getQuizViewModel().getCurrentIndex());
     }
 
     @Override

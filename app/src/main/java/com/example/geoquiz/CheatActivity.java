@@ -2,6 +2,7 @@ package com.example.geoquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ public class CheatActivity extends AppCompatActivity {
     //for extras on the activities that will retrieve and use them.
     //Using my package name as a qualifier for the key prevents collisions with extras from other apps.
     private static final String EXTRA_ANSWER_IS_TRUE = "com.example.geoquiz.answer_is_true";
+    public static final String EXTRA_ANSWER_IS_SHOWN = "com.example.geoquiz.answer_shown";
     private boolean answerIsTrue = false;
     private TextView answerTextView;
     private Button showAnswerButton;
@@ -46,6 +48,7 @@ public class CheatActivity extends AppCompatActivity {
                 int answerText = (answerIsTrue ? R.string.true_button : R.string.false_button);
                 //Set that text to appear in the text view
                 answerTextView.setText(answerText);
+                setAnswerShownResult(true);
             }
         });
     }
@@ -56,5 +59,14 @@ public class CheatActivity extends AppCompatActivity {
         Intent intent = new Intent(packageContext, CheatActivity.class);
         intent.putExtra(EXTRA_ANSWER_IS_TRUE, answerIsTrue);
         return intent;
+    }
+
+    //This function makes an intent with data in it that shows that the user saw the correct answer
+    //It then sets the Result which is sent back to its parent activity to OK and also includes
+    //the Intent to be sent back too. This way MainActivity can get information back from here.
+    private void setAnswerShownResult(boolean answerIsShown) {
+        Intent data = new Intent();
+        data.putExtra(EXTRA_ANSWER_IS_SHOWN, answerIsShown);
+        setResult(Activity.RESULT_OK, data);
     }
 }
