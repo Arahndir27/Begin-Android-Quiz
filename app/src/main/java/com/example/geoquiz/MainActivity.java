@@ -19,6 +19,8 @@ import org.w3c.dom.Text;
 public class MainActivity extends AppCompatActivity {
     //This is a tag for logging
     private final String TAG = "MainActivity";
+    //This is the key for our savedInstanceState Bundle
+    private final String KEY_INDEX = "index";
     //Other members
     private Button trueButton;
     private Button falseButton;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         //You have to call the super method because it does things that need to happen
         super.onCreate(savedInstanceState);
 
+
         //Log a message to show that this method was called
         Log.d(TAG, "onCreate(Bundle) called");
 
@@ -51,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
         ViewModelProvider provider = ViewModelProviders.of(this);
         QuizViewModel quizViewModel = provider.get(QuizViewModel.class);
         Log.d(TAG, "Got a QuizViewModel: " + quizViewModel);
+
+        //Initialize the current index to 0
+        int currentIndex = 0;
+        //Check if the bundle is not null and contains the key KEY_INDEX
+        //If so then we need to update currentIndex to be the currentIndex that
+        //was saved from when saveInstanceState() was called
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_INDEX)) {
+            currentIndex = savedInstanceState.getInt(KEY_INDEX);
+        }
+        quizViewModel.setCurrentIndex(currentIndex);
 
         //Instantiate the buttons
         trueButton = findViewById(R.id.true_button);
@@ -128,6 +141,16 @@ public class MainActivity extends AppCompatActivity {
         //You have to call the super method because it does things that need to happen
         super.onPause();
         Log.d(TAG, "onPause() called");
+    }
+
+    //This function is called before onStop. It saves the state of things outside of memory temporarily
+    //A Bundle is just a map.
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        //Call the super function because you have to
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putInt(KEY_INDEX, getQuizModel().getCurrentIndex());
     }
 
     @Override
