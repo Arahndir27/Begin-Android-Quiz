@@ -111,7 +111,11 @@ public class MainActivity extends AppCompatActivity {
                 //ActivityManager, which manages activities. The intent specifies which class the
                 //ActivityManager should start and where it can be found so that info
                 //can then be passed through startActivity()
-                Intent intent = new Intent(MainActivity.this, CheatActivity.class);
+                boolean answerIsTrue = getQuizModel().getCurrQuestionAns();
+                Intent intent = CheatActivity.newIntent(MainActivity.this, answerIsTrue);
+
+                //This actually sends the request to the OS ActivityManager to create the activity
+                //specified in the intent. It also passes extras in the intent to that activity.
                 startActivity(intent);
             }
         });
