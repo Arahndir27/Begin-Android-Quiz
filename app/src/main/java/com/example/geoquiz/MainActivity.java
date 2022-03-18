@@ -3,6 +3,8 @@ package com.example.geoquiz;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private Button trueButton;
     private Button falseButton;
     private Button nextButton;
+    private Button cheatButton;
     private TextView questionTextView;
 
     //This is a getter for the quiz ViewModel
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         trueButton = findViewById(R.id.true_button);
         falseButton = findViewById(R.id.false_button);
         nextButton = findViewById(R.id.next_button);
+        cheatButton = findViewById(R.id.cheat_button);
         questionTextView = findViewById(R.id.question_text_view);
 
         //Add event listeners to the buttons
@@ -97,6 +101,19 @@ public class MainActivity extends AppCompatActivity {
                 getQuizModel().moveToNextQuestion();
                 //Update the question
                 updateQuestion();            }
+        });
+
+        cheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Intents are objects for 2 way communication. Main activity says that is intends to
+                //make a CheatActivity and asks the Android OS to do so. The Android OS has an
+                //ActivityManager, which manages activities. The intent specifies which class the
+                //ActivityManager should start and where it can be found so that info
+                //can then be passed through startActivity()
+                Intent intent = new Intent(MainActivity.this, CheatActivity.class);
+                startActivity(intent);
+            }
         });
 
         //Set the first question

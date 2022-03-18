@@ -15,7 +15,7 @@
     <string name="warning_text">The Dark Side of the Force is a pathway to many abilities some consider to be unnatural.
         Are you sure you want to do this?</string>
     <string name="show_answer_button">Show Answer</string>
-    <string name="cheat_button">Use the Dark Side</string>
+    <string name="cheat_button">Come to the Dark Side</string>
     <string name="judgement_toast">You were the Chosen One! It was said that you would destroy the Sith, not join them!
         Bring balance to the Force, not leave it in darkness!</string>
 </resources>
